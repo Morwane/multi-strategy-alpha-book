@@ -57,6 +57,74 @@ Their returns are **almost perfectly uncorrelated (ρ = +0.03)** — one trades 
 - Risk parity uses volatility only (not the full covariance / tail dependence); correlations can rise in crises.
 - Research only — **not investment advice**.
 
+## Regime-aware overlay — does HMM regime detection add value?
+
+On top of the static book sits a **walk-forward Hidden Markov Model** that detects
+market regimes (calm / normal / stress) from LSEG macro-market data, and an
+allocation layer that reacts to them. The honest question: **does conditioning on
+regime beat simply running risk parity?**
+
+![S&P 500 with HMM regimes](docs/assets/regime_timeline.png)
+
+The 3-state Gaussian HMM is **refit quarterly on past data only**, standardised on
+the train window only, decoded causally (Viterbi up to *t*), and relabelled to fixed
+economic codes each refit (kills label-switching). Regime economics are clean: stress
+carries ~2× the realised vol and VIX of calm, negative momentum and a flatter curve.
+
+### The result (out-of-sample 2013–2026, net of 2 bps/turnover)
+
+| Strategy | Sharpe | CAGR | Max DD | Calmar | Turnover/yr |
+|----------|:------:|:----:|:------:|:------:|:-----------:|
+| Risk-parity (benchmark) | +1.43 | +14.8% | −14.2% | +1.04 | — |
+| Regime as **alpha-timing**, naive | +1.04 | +10.4% | −16.6% | +0.63 | 40.4 |
+| Regime as **alpha-timing**, disciplined | +0.87 | +8.5% | −15.2% | +0.56 | 4.3 |
+| **Regime as risk-throttle** | **+1.43** | +14.7% | **−10.3%** | **+1.43** | 1.7 |
+
+![Cumulative PnL](docs/assets/regime_cumulative_pnl.png)
+
+**Two findings, one lesson:**
+
+1. **Regime as a return-timing signal destroys value.** Both the naive switch and a
+   disciplined version (confidence gating + hysteresis + scheduled rebalancing, which
+   cut turnover from 40× to 4×) **underperform** static risk parity. The switching lag
+   — the *persistence trap* — and disturbing the diversification mix cost more than the
+   timing earns.
+2. **Regime as a risk-throttle adds value.** Keeping the proven risk-parity mix always
+   on and using the regime *only* to cut gross exposure in confirmed stress keeps the
+   same Sharpe (1.43) while **shrinking max drawdown to −10.3% (from −14.2%) and lifting
+   Calmar by 38%**, at negligible turnover (1.7×/yr).
+
+> **Lesson:** here, HMM regime detection is a risk-management tool, not a return-timing
+> signal — exactly what a desk would conclude.
+
+![Risk-throttle drawdown](docs/assets/regime_drawdown.png)
+
+### Methodology (look-ahead-free by construction)
+
+- **Data** — 13 daily LSEG series 2010–2026 (energy fronts + WTI curve, S&P 500, VIX
+  complex, DXY, US 2Y/10Y yields), pulled once to `data/regime/raw_prices.csv`. Every
+  series is **measured**; missing values are forward-filled over non-trading gaps only.
+- **Features** — causal returns, realised vol 20/60d, rolling skew, drawdown, VIX level
+  & change, VIX term structure, 2s10s slope, Brent-WTI, 3:2:1 crack, WTI curve slope.
+- **HMM** — expanding-window quarterly refit; train-only standardisation; per-day causal
+  Viterbi decode; economic relabelling from emission means.
+- **Backtest** — weights decided on the *prior* day's regime (`shift(1)`); transaction
+  costs charged on realised turnover; everything vol-targeted to 10% for fair comparison
+  on the **same out-of-sample window**.
+
+### Limitations
+
+- Two sleeves only — the regime playbook is a 2-asset tilt + gross throttle, not a rich
+  cross-sectional allocation. More sleeves (e.g. a momentum sleeve) would test the
+  trend regime properly.
+- The risk-throttle's edge is concentrated in drawdown control; it does not raise Sharpe.
+- HMM regimes are descriptive, not causal; the playbook gross/threshold levels are
+  judgment calls, kept deliberately simple to avoid overfitting.
+- Research only — vol-normalised PnL, **not investment advice**.
+
+Run it: `python scripts/run_regime_overlay.py` (needs the saved `raw_prices.csv`; to
+re-pull data, `python scripts/pull_regime_data.py` with LSEG Workspace open).
+
 ## Repository structure
 
 ```
