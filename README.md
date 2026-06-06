@@ -125,6 +125,40 @@ carries ~2× the realised vol and VIX of calm, negative momentum and a flatter c
 Run it: `python scripts/run_regime_overlay.py` (needs the saved `raw_prices.csv`; to
 re-pull data, `python scripts/pull_regime_data.py` with LSEG Workspace open).
 
+## Robustness — does the result survive scrutiny?
+
+Out-of-sample 2013–2026, vol-targeted 10%. Run: `python scripts/run_robustness.py`
+(full appendix in [`reports/robustness.md`](reports/robustness.md)).
+
+**1. Transaction-cost sensitivity** — allocation turnover is low, so the book is essentially cost-insensitive:
+
+| Cost | 0 bps | 5 bps | 10 bps | 25 bps | 50 bps |
+|------|:-----:|:-----:|:------:|:------:|:------:|
+| Sharpe | +1.43 | +1.43 | +1.43 | +1.43 | +1.42 |
+
+**2. Block-bootstrap (2000× resamples, 21-day blocks)** — the edge is not a fluke: risk-throttle Sharpe **90% CI [+1.01, +1.87]**, median +1.44, **P(Sharpe > 0) = 100%**.
+
+![Bootstrap Sharpe](docs/assets/robust_bootstrap_sharpe.png)
+
+**3. Sleeve-correlation stability** — full-sample correlation +0.04; rolling 126-day correlation stays low (worst +0.27), so the diversification does **not** break down in stress (directly relevant to my thesis on correlation regimes).
+
+![Rolling correlation](docs/assets/robust_rolling_correlation.png)
+
+**4. Benchmark comparison** — the market-neutral book dominates passive allocations on risk-adjusted terms and especially drawdown:
+
+| Strategy | Sharpe | CAGR | Max DD |
+|----------|:------:|:----:|:------:|
+| Risk-throttle book | **+1.43** | +14.7% | **−10.3%** |
+| Risk-parity book | +1.43 | +14.8% | −14.2% |
+| SPY | +0.71 | +11.2% | −36.1% |
+| 60/40 (SPY/LQD) | +0.59 | +6.3% | −28.2% |
+
+![Benchmark](docs/assets/robust_benchmark.png)
+
+**5. Crisis stress tests** — being market-neutral, the book is flat-to-positive through every studied crisis (worst episode −2.6%), versus SPY −36% in COVID:
+
+![Crisis](docs/assets/robust_crisis.png)
+
 ## Repository structure
 
 ```
