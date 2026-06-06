@@ -159,6 +159,10 @@ Out-of-sample 2013–2026, vol-targeted 10%. Run: `python scripts/run_robustness
 
 ![Crisis](docs/assets/robust_crisis.png)
 
+**6. Risk contribution** — under risk parity each sleeve carries ~equal risk (**energy 50% / VIX 50%**): risk is equalized, not capital. So neither sleeve secretly dominates the book.
+
+![Risk contribution](docs/assets/robust_risk_contribution.png)
+
 ## Repository structure
 
 ```
