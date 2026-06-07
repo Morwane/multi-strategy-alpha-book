@@ -6,8 +6,11 @@ TD = 252
 
 
 def vol_target(ret: pd.Series, target_annual_vol: float = 0.10) -> pd.Series:
-    """Scale a (vol-normalized) PnL series to a target annual volatility, so that
-    CAGR / VaR / ES / max-DD% become economically interpretable. Sharpe invariant."""
+    """Scale a (vol-normalized) PnL series to a target annual volatility, for
+    comparability across strategies. NOTE: the scale uses FULL-SAMPLE realized vol,
+    so it is an EX-POST normalization, not a live causal target. Sharpe is
+    scale-invariant and is the primary metric; CAGR / VaR / ES / max-DD% are
+    reported on this ex-post-normalized series."""
     ret = ret.fillna(0.0)
     realized = ret.std() * np.sqrt(TD)
     if realized == 0:

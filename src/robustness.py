@@ -57,7 +57,7 @@ def block_bootstrap(ret: pd.Series, n=2000, block=21, seed=0):
     nblocks = int(np.ceil(len(r) / block))
     sharpes, dds = np.empty(n), np.empty(n)
     for i in range(n):
-        starts = rng.integers(0, len(r) - block, nblocks)
+        starts = rng.integers(0, len(r) - block + 1, nblocks)
         samp = np.concatenate([r[s:s + block] for s in starts])[:len(r)]
         sharpes[i] = samp.mean() / samp.std() * np.sqrt(TD)
         eq = np.cumprod(1 + samp); dds[i] = (eq / np.maximum.accumulate(eq) - 1).min()

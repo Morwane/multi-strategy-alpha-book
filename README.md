@@ -31,6 +31,8 @@ Their returns are **almost perfectly uncorrelated (ρ = +0.03)** — one trades 
 ![Performance summary](docs/assets/performance_summary_table.png)
 
 > The combined book's **Sharpe (1.48) exceeds the best single sleeve (1.24)** — the hallmark of genuine diversification. Risk parity also beats naive equal-weight (1.48 vs 0.93) by sizing each sleeve to contribute equal risk.
+>
+> _Note on samples: this headline is the **full 2010–2026** sample. The regime-overlay and robustness sections below use a stricter **out-of-sample 2013–2026** window (HMM needs a training burn-in), where the static risk-parity book scores **1.43** — the benchmark those sections compare against._
 
 ![Sleeve correlation](docs/assets/sleeve_correlation.png)
 
@@ -47,7 +49,7 @@ Their returns are **almost perfectly uncorrelated (ρ = +0.03)** — one trades 
 ## Risk controls & robustness
 
 - Weights use **trailing volatility only**; they sum to 1; portfolio vol-targeted.
-- **Subperiod robustness** across four regime eras; automated `quant_checks` + a `pytest` suite (6 tests).
+- **Subperiod robustness** across four regime eras; automated `quant_checks` + a `pytest` suite (11 tests).
 
 ![Subperiod robustness](docs/assets/subperiod_robustness.png)
 
