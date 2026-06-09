@@ -1,5 +1,7 @@
 # Multi-Strategy Alpha Book
 
+[![CI](https://github.com/Morwane/multi-strategy-alpha-book/actions/workflows/ci.yml/badge.svg)](https://github.com/Morwane/multi-strategy-alpha-book/actions/workflows/ci.yml)
+
 > Combining **decorrelated alpha sleeves** into one risk-managed book via inverse-volatility **risk parity** — the diversification "free lunch" in action. Built on LSEG-data strategies, look-ahead-free, vol-targeted.
 
 ![Equity curve](docs/assets/equity_curve.png)
