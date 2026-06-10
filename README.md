@@ -167,6 +167,23 @@ Out-of-sample 2013–2026, vol-targeted 10%. Run: `python scripts/run_robustness
 
 ![Risk contribution](docs/assets/robust_risk_contribution.png)
 
+## Sleeve-addition study — a tested *negative* result
+
+Before adding sleeves, I test whether they actually help. I built a **cross-asset trend (time-series momentum) sleeve** over **13 LSEG futures markets** (S&P/Nasdaq/Dow, UST 2Y/10Y/30Y + Bund, WTI/Brent/NatGas/gold/silver/copper) — blended 3/6/12-month trend, inverse-vol risk weighting, look-ahead-free.
+
+| | Sharpe | corr to energy | corr to VIX |
+|---|:---:|:---:|:---:|
+| Trend sleeve (standalone) | **+0.03** | −0.06 | −0.01 |
+
+| Risk-parity book (common window) | Sharpe | Max DD | Calmar |
+|---|:---:|:---:|:---:|
+| 2 sleeves (energy + VIX) | **+1.36** | −13.8% | +1.02 |
+| 3 sleeves (+ trend) | +1.00 | −12.2% | +0.82 |
+
+**Verdict: do not add it.** The trend sleeve is beautifully **decorrelated** (ρ ≈ 0 to both sleeves) — but its standalone Sharpe is ~0, so it **dilutes** the book. The reasons are honest and well-documented: 2010–2026 was the *"lost decade" for trend-following*, and 13 quasi-clustered markets (3 US-equity, correlated energy, correlated metals) give only ~4–5 independent bets vs the 50–100+ a real CTA runs.
+
+**The lesson:** decorrelation alone is not enough — a sleeve must also carry a positive expected return. Testing and *rejecting* a plausible idea is part of the process. *(Run: `python scripts/pull_trend_universe.py` then `python scripts/trend_sleeve_analysis.py`.)*
+
 ## Repository structure
 
 ```

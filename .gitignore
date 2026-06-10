@@ -24,3 +24,6 @@ data/regime/regime_stats.csv
 data/regime/overlay_returns.csv
 data/regime/overlay_performance.csv
 data/regime/feature_coverage.csv
+
+# proprietary LSEG raw data (do not publish)
+data/trend/

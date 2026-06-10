@@ -1,0 +1,14 @@
+Trend universe: broad LSEG universe (13 markets)
+TREND sleeve (standalone): Sharpe +0.03 | CAGR -0.2% | maxDD -45.9%
+
+Sleeve correlation matrix:
+                energy_statarb  vix_carry  trend
+energy_statarb            1.00       0.03  -0.06
+vix_carry                 0.03       1.00  -0.01
+trend                    -0.06      -0.01   1.00
+
+Risk-parity book (same window, vol-targeted 10%):
+  2 sleeves (energy+vix)        Sharpe +1.36 | CAGR +14.0% | maxDD -13.8% | Calmar +1.02
+  3 sleeves (+trend)            Sharpe +1.00 | CAGR +10.0% | maxDD -12.2% | Calmar +0.82
+
+Verdict: DILUTES or neutral — keep 2 sleeves
